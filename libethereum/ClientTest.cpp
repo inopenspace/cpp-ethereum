@@ -51,6 +51,7 @@ ClientTest::ClientTest(
 	Client(_params, _networkID, _host, _gpForAdoption, _dbPath, _forceAction, _limits)
 {
 	allowVprAccess();
+	startWorking();
 }
 
 void ClientTest::setChainParams(string const& _genesis)

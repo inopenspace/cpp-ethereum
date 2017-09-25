@@ -31,6 +31,7 @@ void Worker::startWorking()
 {
 //	cnote << "startWorking for thread" << m_name;
 	std::unique_lock<std::mutex> l(x_work);
+	assert (m_state != WorkerState::Constructor); // Vptr table should be ready here! Have you called allowVprAccess();?
 	if (m_work)
 	{
 		WorkerState ex = WorkerState::Stopped;
@@ -95,10 +96,9 @@ void Worker::startWorking()
 		}));
 //		cnote << "Spawning" << m_name;
 	}
-
 	DEV_TIMED_ABOVE("Start worker", 100)
 		while (m_state == WorkerState::Starting)
-			m_state_notifier.wait(l);
+			m_state_notifier.wait(l); // waiting
 }
 
 void Worker::stopWorking()
@@ -135,6 +135,7 @@ void Worker::terminate()
 
 void Worker::allowVprAccess()
 {
+	Guard l(x_work);
 	m_state = WorkerState::Starting;
 	m_state_notifier.notify_all();
 }
