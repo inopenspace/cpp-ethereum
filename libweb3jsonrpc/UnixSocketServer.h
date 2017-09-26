@@ -27,6 +27,7 @@ along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 #include <thread>
 #include <sys/un.h>
 #include "IpcServerBase.h"
+#include <atomic>
 
 namespace dev
 {
@@ -45,7 +46,7 @@ protected:
 	size_t Read(int _connection, void* _data, size_t _size) override;
 
 	sockaddr_un m_address;
-	int m_socket = 0;
+	std::atomic<int> m_socket{0};
 };
 
 } // namespace dev
